@@ -35,6 +35,7 @@ public class DizionarioController {
 	@FXML
 	void doReset(ActionEvent event) {
 		txtResult.setText("Reset!");
+		inputNumeroLettere.setEditable(true);
 	}
 
 	@FXML
@@ -48,9 +49,11 @@ public class DizionarioController {
 			List<String> allWord = model.createGraph(numeroLettere) ;
 			
 			txtResult.appendText(String.format("Grafo creato con %d vertici.\n",allWord.size()));
+
+			inputNumeroLettere.setEditable(false); // così evito errori
 			
 		} catch (RuntimeException re) {
-			txtResult.setText(re.getMessage());
+			txtResult.appendText(re.getMessage()+"\n");
 		}
 	}
 
@@ -62,7 +65,7 @@ public class DizionarioController {
 			txtResult.appendText(model.findMaxDegree()+"\n");
 			
 		} catch (RuntimeException re) {
-			txtResult.setText(re.getMessage());
+			txtResult.appendText(re.getMessage()+"\n");
 		}
 	}
 
@@ -70,7 +73,11 @@ public class DizionarioController {
 	void doTrovaVicini(ActionEvent event) {
 		
 		try {
+			
 			String parolaInserita = inputParola.getText();
+			
+			if(parolaInserita.length()!=Integer.parseInt(inputNumeroLettere.getText()))
+				throw new RuntimeException("La parola deve essere dello stesso numero di caratteri iniziali.\n");
 			
 			txtResult.appendText("Vicini di "+parolaInserita+": ");
 			
@@ -80,7 +87,7 @@ public class DizionarioController {
 			txtResult.appendText(".\n");
 			
 		} catch (RuntimeException re) {
-			txtResult.setText(re.getMessage());
+			txtResult.appendText(re.getMessage()+"\n");
 		}
 	}
 

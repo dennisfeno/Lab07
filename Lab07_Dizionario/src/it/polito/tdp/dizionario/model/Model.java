@@ -13,10 +13,12 @@ import it.polito.tdp.dizionario.db.WordDAO;
 public class Model {
 
 	WordDAO db = new WordDAO(); 
-	UndirectedGraph<String, DefaultEdge> grafo = new SimpleGraph<String, DefaultEdge> (DefaultEdge.class) ;
+	UndirectedGraph<String, DefaultEdge> grafo; 
 	
 	public List<String> createGraph(int numeroLettere) {
 
+		grafo = new SimpleGraph<String, DefaultEdge> (DefaultEdge.class) ; //inizializzo il grafo
+		
 		List<String> allWord = db.getAllWordsFixedLength(numeroLettere);
 		
 		for(String s : allWord)
@@ -88,4 +90,5 @@ public class Model {
 		
 		return "MaxDegree: "+ maxDegree;
 	}
+
 }
