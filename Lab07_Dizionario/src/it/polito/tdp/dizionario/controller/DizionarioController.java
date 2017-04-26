@@ -1,8 +1,10 @@
 package it.polito.tdp.dizionario.controller;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.dizionario.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,6 +13,8 @@ import javafx.scene.control.TextField;
 
 public class DizionarioController {
 
+	private Model model = null ;
+	
 	@FXML
 	private ResourceBundle resources;
 	@FXML
@@ -37,7 +41,13 @@ public class DizionarioController {
 	void doGeneraGrafo(ActionEvent event) {
 
 		try {
-			txtResult.setText("Controller -- TODO!");
+			int numeroLettere = 0 ; 
+			
+			numeroLettere = Integer.parseInt(inputNumeroLettere.getText() );
+			
+			List<String> allWord = model.createGraph(numeroLettere) ;
+			
+			txtResult.appendText(String.format("Grafo creato con %d vertici.\n",allWord.size()));
 			
 		} catch (RuntimeException re) {
 			txtResult.setText(re.getMessage());
@@ -48,8 +58,9 @@ public class DizionarioController {
 	void doTrovaGradoMax(ActionEvent event) {
 		
 		try {
-			txtResult.setText("Controller -- TODO!");
-
+			
+			txtResult.appendText(model.findMaxDegree()+"\n");
+			
 		} catch (RuntimeException re) {
 			txtResult.setText(re.getMessage());
 		}
@@ -59,8 +70,15 @@ public class DizionarioController {
 	void doTrovaVicini(ActionEvent event) {
 		
 		try {
-			txtResult.setText("Controller -- TODO!");
-
+			String parolaInserita = inputParola.getText();
+			
+			txtResult.appendText("Vicini di "+parolaInserita+": ");
+			
+			for(String s : model.displayNeighbours(parolaInserita) )
+				txtResult.appendText(s+" ");
+			
+			txtResult.appendText(".\n");
+			
 		} catch (RuntimeException re) {
 			txtResult.setText(re.getMessage());
 		}
@@ -74,5 +92,9 @@ public class DizionarioController {
 		assert btnGeneraGrafo != null : "fx:id=\"btnGeneraGrafo\" was not injected: check your FXML file 'Dizionario.fxml'.";
 		assert btnTrovaVicini != null : "fx:id=\"btnTrovaVicini\" was not injected: check your FXML file 'Dizionario.fxml'.";
 		assert btnTrovaGradoMax != null : "fx:id=\"btnTrovaTutti\" was not injected: check your FXML file 'Dizionario.fxml'.";
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
 	}
 }
