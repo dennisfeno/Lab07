@@ -7,6 +7,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 
 import it.polito.tdp.dizionario.db.WordDAO;
 
@@ -91,4 +92,65 @@ public class Model {
 		return "MaxDegree: "+ maxDegree;
 	}
 
+	public List<String> displayAllNeighbours(String parolaInserita) {
+
+		BreadthFirstIterator<String, DefaultEdge> bfv = new BreadthFirstIterator<>(grafo, parolaInserita) ;
+		List<String> allNeighbours = new ArrayList<String>() ; 
+
+		while(bfv.hasNext()){
+			//System.out.println(bfv.next());
+			allNeighbours.add(bfv.next());
+		}
+		
+		return allNeighbours;
+	}
+	
+	public List<String> displayAllNeighboursRecursive(String parolaInserita){
+		List<String> allNeighbours = new ArrayList<String>() ; 
+		
+		if(grafo.containsVertex(parolaInserita))
+			recursive(allNeighbours,parolaInserita);
+		else
+			return null ;
+		
+		return allNeighbours;
+	}
+
+	private void recursive(List<String> allNeighbours, String parola) {
+		
+		for(DefaultEdge d : grafo.edgesOf(parola) ){
+			String vicino = Graphs.getOppositeVertex(grafo, d, parola) ;
+			if(!allNeighbours.contains(vicino)){
+				allNeighbours.add(vicino) ;
+				recursive(allNeighbours, vicino) ;
+			}
+		}		
+	}
+
+	public List<String> displayAllNeighboursIterative(String parolaInserita){
+		List<String> visitati = new ArrayList<String>() ; 
+		List<String> daVisitare = new ArrayList<String>() ; 
+		String attuale = null , vicino = null; 
+		daVisitare.add(parolaInserita) ;
+		
+		while(!daVisitare.isEmpty()){
+			
+			attuale = daVisitare.get(0) ; // prendo il primo della lista.
+			visitati.add(attuale) ; // lo metto in quelli visitati
+			daVisitare.remove(attuale) ; // tolgo da quelli da visitare quello appena visitato
+			
+			for(DefaultEdge d : grafo.edgesOf(attuale) ){
+				vicino = Graphs.getOppositeVertex(grafo, d, attuale) ;
+				if(!visitati.contains(vicino)){ // se i visitati non contengono questo vicino
+					daVisitare.add(vicino) ;	// lo metto tra quelli da visitare. 
+				}
+			}
+			
+			System.out.println("visitati: "+ visitati);
+			System.out.println("davisitare: "+ daVisitare) ;
+			
+		}
+		
+		return visitati ; 
+	}
 }

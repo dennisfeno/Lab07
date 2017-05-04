@@ -31,7 +31,9 @@ public class DizionarioController {
 	private Button btnTrovaVicini;
 	@FXML
 	private Button btnTrovaGradoMax;
-
+    @FXML
+    private Button btnTuttiVicini;
+    
 	@FXML
 	void doReset(ActionEvent event) {
 		txtResult.setText("Reset!");
@@ -90,7 +92,28 @@ public class DizionarioController {
 			txtResult.appendText(re.getMessage()+"\n");
 		}
 	}
-
+	
+    @FXML
+    void doTrovaTuttiVicini(ActionEvent event) {		try {
+		
+		String parolaInserita = inputParola.getText();
+		
+		if(parolaInserita.length()!=Integer.parseInt(inputNumeroLettere.getText()))
+			throw new RuntimeException("La parola deve essere dello stesso numero di caratteri iniziali.\n");
+		
+		txtResult.appendText("Tutti i vicini di "+parolaInserita+": ");
+		for(String s : model.displayAllNeighbours(parolaInserita) ) // con funzioni della libreria 
+		// for(String s : model.displayAllNeighboursRecursive(parolaInserita) ) 
+		// for(String s : model.displayAllNeighboursIterative(parolaInserita) ) molto poco efficiente
+			txtResult.appendText(s+" ");
+		
+		txtResult.appendText(".\n");
+		
+	} catch (RuntimeException re) {
+		txtResult.appendText(re.getMessage()+"\n");
+	}
+    }
+    
 	@FXML
 	void initialize() {
 		assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Dizionario.fxml'.";
@@ -99,6 +122,7 @@ public class DizionarioController {
 		assert btnGeneraGrafo != null : "fx:id=\"btnGeneraGrafo\" was not injected: check your FXML file 'Dizionario.fxml'.";
 		assert btnTrovaVicini != null : "fx:id=\"btnTrovaVicini\" was not injected: check your FXML file 'Dizionario.fxml'.";
 		assert btnTrovaGradoMax != null : "fx:id=\"btnTrovaTutti\" was not injected: check your FXML file 'Dizionario.fxml'.";
+        assert btnTuttiVicini != null : "fx:id=\"btnTuttiVicini\" was not injected: check your FXML file 'Dizionario.fxml'.";
 	}
 
 	public void setModel(Model model) {
